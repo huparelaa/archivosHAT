@@ -7,8 +7,35 @@ struct FileHeader {
     char fileType[4] = "HAT";
     int version = 1;
     int headerSize = sizeof(FileHeader);
+    // patient info
+    int patientInfoSize = sizeof(Patient);
+    // image info
+    int imageInfoSize = sizeof(Image);
+
     int numberOfElements = 10;
-    long creationDate; 
+    time_t creationDate;
+};
+
+// Patient info
+struct Patient {
+    char name[50];
+    char lastName[50];
+};
+
+// Image info
+struct Image {
+    char name[50];
+    char path[100];
+    char type[10];
+    int width;
+    int height;
+    int depth;
+    int channels;
+    int bitsPerPixel;
+    int size;
+    char date[20];
+    char time[20];
+    char description[100];
 };
 
 int main() {

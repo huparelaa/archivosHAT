@@ -8,7 +8,7 @@ struct Patient
     char name[50];
     char lastName[50];
     int age;
-    int gender;
+    char gender[20];
     char dateOfBirth[20];
     char address[100];
     char phone[20];

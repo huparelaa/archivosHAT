@@ -23,7 +23,6 @@ struct Image
     int height;
 };
 
-
 struct FileHeader
 {
     char fileType[10];

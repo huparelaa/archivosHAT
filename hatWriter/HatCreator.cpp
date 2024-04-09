@@ -1,8 +1,12 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
+#include <chrono>
 #include <cstring>
 #include "FileHeader.h"
+#include <string>
+
+using namespace std;
 
 int main() {
     // Crear un archivo .hat
@@ -27,19 +31,15 @@ int main() {
         "Ninguna",
         "Ninguna"
     };
-
-    Image image = {
-        "Radiografia",
-        "jpg",
-        255,
-        255
-    };
+    // Patient patient = getPatientData();
+    
+    Image image = createImageFromPath("6ta.jpg");
 
     // Configurar la cabecera
     FileHeader header = {
         "HAT",
         "1.0",
-        "2024-10-01",
+        "9-4-2024",
         patient,
         image
     };

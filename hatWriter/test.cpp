@@ -1,106 +1,51 @@
-#include <iostream>
-#include <string>
-#include <fstream> 
 #include <opencv2/opencv.hpp>
+#include <iostream>
 
-using namespace std;
 using namespace cv;
+using namespace std;
 
-class Image {
-private:
-    string name;
-    string type;
-    int width;
-    int height;
-    string weight;
+Mat pruebaVerMatriz(const string& imagen) {
+    Mat image = imread(imagen, IMREAD_COLOR);
+    Mat matriz;
 
-public:
-    // Constructor
-    Image(string n, string t, int w, int h, string wt) {
-        name = n;
-        type = t;
-        width = w;
-        height = h;
-        weight = wt;
+    // Verifica si la imagen se cargó correctamente
+    if(image.empty()) {
+        cout << "Error al cargar la imagen." << endl;
+        return matriz; // Devuelve una matriz vacía si hay un error
     }
 
-    // Funciones get para cada característica
-    string getName() {
-        return name;
-    }
+    // Muestra las dimensiones de la imagen
+    cout << "Dimensiones de la imagen: " << image.rows << "x" << image.cols << endl;
 
-    void setName(string n) {
-        name = n;
-    }
+    // Convierte la imagen a matriz
+    cvtColor(image, matriz, COLOR_BGR2GRAY); // Convierte a escala de grises para simplificar la matriz
 
-    string getType() {
-        return type;
-    }
+    // Imprime la matriz (opcional)
+    cout << "Matriz resultante: " << endl << matriz << endl;
 
-    void setType(string t) {
-        type = t;
-    }
-
-    int getWidth() {
-        return width;
-    }
-
-    void setWidth(int w) {
-        width = w;
-    }
-
-    int getHeight() {
-        return height;
-    }
-
-    void setHeight(int h) {
-        height = h;
-    }
-
-    string getWeight() {
-        return weight;
-    }
-
-    void setWeight(string wt) {
-        weight = wt;
-    }
-};
-
-Image createImageFromPath(string imagePath) {
-    Mat image = imread(imagePath);
-
-    if (image.empty()) {
-        cerr << "Error al cargar la imagen." << endl;
-        exit(EXIT_FAILURE);
-    }
-
-    string name = imagePath.substr(imagePath.find_last_of("/\\") + 1);
-    string type = imagePath.substr(imagePath.find_last_of(".") + 1);
-
-    int width = image.cols;
-    int height = image.rows;
-
-    // Obtener el tamaño del archivo
-    ifstream file(imagePath, ios::binary | ios::ate);
-    if (!file.is_open()) {
-        cerr << "Error al abrir el archivo." << endl;
-        exit(EXIT_FAILURE);
-    }
-    string weight = to_string(file.tellg());
-
-    return Image(name, type, width, height, weight);
+    return matriz; // Devuelve la matriz
 }
 
+void generarImagenAPartirDeMatriz(const Mat& matriz, const string& nombreArchivo) {
+    // Crear una imagen a partir de la matriz
+    Mat imagen(matriz.rows, matriz.cols, CV_8UC1); // CV_8UC1 indica una imagen de 1 canal (escala de grises)
+    
+    // Copiar los valores de la matriz a la imagen
+    matriz.convertTo(imagen, CV_8U); // Convertir la matriz a tipo CV_8U (8 bits sin signo)
+
+    // Guardar la imagen en el archivo especificado
+    imwrite(nombreArchivo, imagen);
+}
 
 int main() {
-    string imagePath = "6ta.jpg"; // Cambia esto por la ruta de tu imagen
-    Image img = createImageFromPath(imagePath);
+    // Definir una matriz de ejemplo
 
-    cout << "Nombre: " << img.getName() << endl;
-    cout << "Tipo: " << img.getType() << endl;
-    cout << "Ancho: " << img.getWidth() << endl;
-    cout << "Altura: " << img.getHeight() << endl;
-    cout << "Peso: " << img.getWeight() << " bytes" << endl;
+    Mat matriz = pruebaVerMatriz("6ta.jpg");
+    
+    // Llamar a la función para generar la imagen a partir de la matriz
+    generarImagenAPartirDeMatriz(matriz, "imagen_generada.jpg");
+    
+    cout << "Imagen generada correctamente." << endl;
 
     return 0;
 }

@@ -1,3 +1,6 @@
+#ifndef FILEHEADER_H
+#define FILEHEADER_H
+#include <string>
 struct Patient
 {
     char name[50];
@@ -21,6 +24,7 @@ struct Image
     char type[10];
     int width;
     int height;
+    char weight[20];
 };
 
 struct FileHeader
@@ -31,3 +35,7 @@ struct FileHeader
     Patient patient;
     Image image;
 };
+
+Patient getPatientData();
+Image createImageFromPath(std::string path);
+#endif 

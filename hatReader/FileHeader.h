@@ -1,3 +1,6 @@
+#ifndef FILEHEADER_H
+#define FILEHEADER_H
+
 struct Patient
 {
     char name[50];
@@ -21,6 +24,7 @@ struct Image
     char type[10];
     int width;
     int height;
+    char weight[20];
 };
 
 
@@ -32,3 +36,5 @@ struct FileHeader
     Patient patient;
     Image image;
 };
+
+#endif 

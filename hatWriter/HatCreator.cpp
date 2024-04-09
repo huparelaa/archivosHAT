@@ -12,7 +12,7 @@ using namespace std;
 
 int main() {
     // Crear un archivo .hat
-    std::ofstream outFile("radiography.hat", std::ios::binary);
+    std::ofstream outFile("../hat/radiography.hat", std::ios::binary);
     if (!outFile) {
         std::cerr << "Error al crear el archivo" << std::endl;
         return 1;

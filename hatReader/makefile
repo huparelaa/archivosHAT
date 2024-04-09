@@ -1,2 +1,5 @@
 compile:
-	g++ -o hatReader HatReader.cpp
+	g++ -o hatReader HatReader.cpp Image.cpp -std=c++11 -Wall -Wextra `pkg-config --cflags --libs opencv4`
+
+run:
+	./hatReader

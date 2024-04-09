@@ -90,17 +90,3 @@ Image createImageFromPath(string imagePath) {
 
     return Image(name, type, width, height, weight);
 }
-
-
-int main() {
-    string imagePath = "6ta.jpg"; // Cambia esto por la ruta de tu imagen
-    Image img = createImageFromPath(imagePath);
-
-    cout << "Nombre: " << img.getName() << endl;
-    cout << "Tipo: " << img.getType() << endl;
-    cout << "Ancho: " << img.getWidth() << endl;
-    cout << "Altura: " << img.getHeight() << endl;
-    cout << "Peso: " << img.getWeight() << " bytes" << endl;
-
-    return 0;
-}

@@ -5,6 +5,8 @@
 #include <cstring>
 #include "FileHeader.h"
 #include <string>
+#include "Body.h"
+#include <opencv2/opencv.hpp>
 
 using namespace std;
 
@@ -33,7 +35,7 @@ int main() {
     };
     // Patient patient = getPatientData();
     
-    Image image = createImageFromPath("6ta.jpg");
+    Image image = createImageFromPath("static/6ta.jpg");
 
     // Configurar la cabecera
     FileHeader header = {
@@ -46,8 +48,8 @@ int main() {
 
     // Escribir la cabecera en el archivo
     outFile.write((char*)&header, sizeof(header));
-
-    outFile.write("waos", 8); // Escribir una cadena de caracteres
+    Mat matriz = generarMatrizApartirDeImagen("static/6ta.jpg");
+    outFile.write((char*)matriz.data, matriz.total() * matriz.elemSize());
     // Cerrar el archivo
     outFile.close();
     std::cout << "Archivo 'radiography.hat' creado exitosamente." << std::endl;

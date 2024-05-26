@@ -5,7 +5,7 @@
 #include <cstring>
 #include "./header/FileHeader.h"
 #include <string>
-#include "Body.h"
+#include "./imageBody/Body.h"
 #include <opencv2/opencv.hpp>
 
 using namespace std;

@@ -1,9 +1,9 @@
 #include <iostream>
 #include <fstream>
-#include "FileHeader.h"
+#include "./header/FileHeader.h"
 #include <opencv2/opencv.hpp>
 #include <iostream>
-#include "Image.h"
+#include "./imageHAT/Image.h"
 
 using namespace cv;
 using namespace std;

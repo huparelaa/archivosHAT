@@ -3,7 +3,7 @@
 #include <ctime>
 #include <chrono>
 #include <cstring>
-#include "FileHeader.h"
+#include "./header/FileHeader.h"
 #include <string>
 #include "Body.h"
 #include <opencv2/opencv.hpp>
@@ -11,7 +11,6 @@
 using namespace std;
 
 int main() {
-    // Crear un archivo .hat
     std::ofstream outFile("../hat/radiography.hat", std::ios::binary);
     if (!outFile) {
         std::cerr << "Error al crear el archivo" << std::endl;
@@ -37,7 +36,6 @@ int main() {
     
     Image image = createImageFromPath("static/6ta.jpg");
 
-    // Configurar la cabecera
     FileHeader header = {
         "HAT",
         "1.0",
@@ -46,11 +44,9 @@ int main() {
         image
     };
 
-    // Escribir la cabecera en el archivo
     outFile.write((char*)&header, sizeof(header));
     Mat matriz = generarMatrizApartirDeImagen("static/6ta.jpg");
     outFile.write((char*)matriz.data, matriz.total() * matriz.elemSize());
-    // Cerrar el archivo
     outFile.close();
     std::cout << "Archivo 'radiography.hat' creado exitosamente." << std::endl;
 

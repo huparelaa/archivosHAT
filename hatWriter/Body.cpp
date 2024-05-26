@@ -8,7 +8,6 @@ Mat generarMatrizApartirDeImagen(const string& imagen) {
     Mat image = imread(imagen, IMREAD_COLOR);
     Mat matriz;
 
-    // Verifica si la imagen se cargó correctamente
     if(image.empty()) {
         cout << "Error al cargar la imagen." << endl;
         return matriz; // Devuelve una matriz vacía si hay un error
@@ -20,5 +19,5 @@ Mat generarMatrizApartirDeImagen(const string& imagen) {
     // Convierte la imagen a matriz
     cvtColor(image, matriz, COLOR_BGR2GRAY); // Convierte a escala de grises para simplificar la matriz
 
-    return matriz; // Devuelve la matriz
+    return matriz;
 }

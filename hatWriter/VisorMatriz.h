@@ -8,9 +8,7 @@ class VisorMatrizImg {
 private:
     cv::Mat matrizImage;
 public:
-    // Metodo para convertir una imagen a matriz
     Mat generarMatrizApartiDeImagen(const string& imagen);
-    // Método para visualizar la matriz como una imagen
     void generarImagenApartirDeMatriz(const Mat& matriz, const string& nombreArchivo);
 };
 #endif

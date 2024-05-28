@@ -4,6 +4,7 @@
 #include <limits>
 #include <string>
 #include <opencv2/opencv.hpp>
+
 using namespace std;
 using namespace cv;
 
@@ -12,44 +13,44 @@ Patient getPatientData()
     Patient patient;
 
     std::cout << "Ingrese el nombre del paciente: ";
-    std::cin.getline(patient.name, 50);
+    std::getline(std::cin, patient.name);
 
     std::cout << "Ingrese el apellido del paciente: ";
-    std::cin.getline(patient.lastName, 50);
+    std::getline(std::cin, patient.lastName);
 
     std::cout << "Ingrese la edad del paciente: ";
     std::cin >> patient.age;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpia el búfer de entrada porque inmediatamente voy a usar .getline
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpia el búfer de entrada
 
-    std::cout << "Ingrese el sexo del paciente: (M o F)";
-    std::cin.getline(patient.gender, 2);
+    std::cout << "Ingrese el sexo del paciente (M o F): ";
+    std::getline(std::cin, patient.gender);
 
     std::cout << "Ingrese la fecha de nacimiento del paciente: ";
-    std::cin.getline(patient.dateOfBirth, 20);
+    std::getline(std::cin, patient.dateOfBirth);
 
     std::cout << "Ingrese la dirección del paciente: ";
-    std::cin.getline(patient.address, 100);
+    std::getline(std::cin, patient.address);
 
     std::cout << "Ingrese el celular del paciente: ";
-    std::cin.getline(patient.phone, 20);
+    std::getline(std::cin, patient.phone);
 
     std::cout << "Ingrese el email del paciente: ";
-    std::cin.getline(patient.email, 50);
+    std::getline(std::cin, patient.email);
 
     std::cout << "Ingrese el tipo de sangre del paciente: ";
-    std::cin.getline(patient.bloodType, 5);
+    std::getline(std::cin, patient.bloodType);
 
     std::cout << "Ingrese las alergias del paciente: ";
-    std::cin.getline(patient.allergies, 100);
+    std::getline(std::cin, patient.allergies);
 
     std::cout << "Ingrese las enfermedades del paciente: ";
-    std::cin.getline(patient.diseases, 100);
+    std::getline(std::cin, patient.diseases);
 
-    std::cout << "Ingrese las cirugías que ha tenído el paciente: ";
-    std::cin.getline(patient.surgeries, 100);
+    std::cout << "Ingrese las cirugías que ha tenido el paciente: ";
+    std::getline(std::cin, patient.surgeries);
 
     std::cout << "Ingrese las observaciones realizadas sobre el paciente: ";
-    std::cin.getline(patient.observations, 255);
+    std::getline(std::cin, patient.observations);
 
     return patient;
 }
@@ -75,21 +76,93 @@ Image createImageFromPath(string imagePath) {
         exit(EXIT_FAILURE);
     }
     string weightStr = to_string(file.tellg());
-    
+
     Image img;
-
-    // Asegurándose de no copiar fuera de los límites del array
-    strncpy(img.name, name.c_str(), sizeof(img.name) - 1);
-    img.name[sizeof(img.name) - 1] = '\0'; // Asegurar terminación de la cadena
-
-    strncpy(img.type, type.c_str(), sizeof(img.type) - 1);
-    img.type[sizeof(img.type) - 1] = '\0'; // Asegurar terminación de la cadena
-
+    img.name = name;
+    img.type = type;
     img.width = width;
     img.height = height;
-
-    strncpy(img.weight, weightStr.c_str(), sizeof(img.weight) - 1);
-    img.weight[sizeof(img.weight) - 1] = '\0'; // Asegurar terminación de la cadena
+    img.weight = weightStr;
 
     return img;
+}
+
+void writeString(ofstream& outFile, const std::string& str) {
+    size_t len = str.length();
+    outFile.write(reinterpret_cast<const char*>(&len), sizeof(len));
+    outFile.write(str.c_str(), len);
+}
+
+void readString(ifstream& inFile, std::string& str) {
+    size_t len;
+    inFile.read(reinterpret_cast<char*>(&len), sizeof(len));
+    char* buffer = new char[len + 1];
+    inFile.read(buffer, len);
+    buffer[len] = '\0';
+    str = buffer;
+    delete[] buffer;
+}
+
+void writePatient(ofstream& outFile, const Patient& patient) {
+    writeString(outFile, patient.name);
+    writeString(outFile, patient.lastName);
+    outFile.write(reinterpret_cast<const char*>(&patient.age), sizeof(patient.age));
+    writeString(outFile, patient.gender);
+    writeString(outFile, patient.dateOfBirth);
+    writeString(outFile, patient.address);
+    writeString(outFile, patient.phone);
+    writeString(outFile, patient.email);
+    writeString(outFile, patient.bloodType);
+    writeString(outFile, patient.allergies);
+    writeString(outFile, patient.diseases);
+    writeString(outFile, patient.surgeries);
+    writeString(outFile, patient.observations);
+}
+
+void readPatient(ifstream& inFile, Patient& patient) {
+    readString(inFile, patient.name);
+    readString(inFile, patient.lastName);
+    inFile.read(reinterpret_cast<char*>(&patient.age), sizeof(patient.age));
+    readString(inFile, patient.gender);
+    readString(inFile, patient.dateOfBirth);
+    readString(inFile, patient.address);
+    readString(inFile, patient.phone);
+    readString(inFile, patient.email);
+    readString(inFile, patient.bloodType);
+    readString(inFile, patient.allergies);
+    readString(inFile, patient.diseases);
+    readString(inFile, patient.surgeries);
+    readString(inFile, patient.observations);
+}
+
+void writeImage(ofstream& outFile, const Image& image) {
+    writeString(outFile, image.name);
+    writeString(outFile, image.type);
+    outFile.write(reinterpret_cast<const char*>(&image.width), sizeof(image.width));
+    outFile.write(reinterpret_cast<const char*>(&image.height), sizeof(image.height));
+    writeString(outFile, image.weight);
+}
+
+void readImage(ifstream& inFile, Image& image) {
+    readString(inFile, image.name);
+    readString(inFile, image.type);
+    inFile.read(reinterpret_cast<char*>(&image.width), sizeof(image.width));
+    inFile.read(reinterpret_cast<char*>(&image.height), sizeof(image.height));
+    readString(inFile, image.weight);
+}
+
+void writeHeader(ofstream& outFile, const FileHeader& header) {
+    writeString(outFile, header.fileType);
+    writeString(outFile, header.version);
+    writeString(outFile, header.creation_date);
+    writePatient(outFile, header.patient);
+    writeImage(outFile, header.image);
+}
+
+void readHeader(ifstream& inFile, FileHeader& header) {
+    readString(inFile, header.fileType);
+    readString(inFile, header.version);
+    readString(inFile, header.creation_date);
+    readPatient(inFile, header.patient);
+    readImage(inFile, header.image);
 }

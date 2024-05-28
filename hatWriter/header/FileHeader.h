@@ -1,41 +1,53 @@
 #ifndef FILEHEADER_H
 #define FILEHEADER_H
 #include <string>
+#include <fstream>
+
 struct Patient
 {
-    char name[50];
-    char lastName[50];
+    std::string name;
+    std::string lastName;
     int age;
-    char gender[2];
-    char dateOfBirth[20];
-    char address[100];
-    char phone[20];
-    char email[50];
-    char bloodType[5];
-    char allergies[100];
-    char diseases[100];
-    char surgeries[100];
-    char observations[255];
+    std::string gender;
+    std::string dateOfBirth;
+    std::string address;
+    std::string phone;
+    std::string email;
+    std::string bloodType;
+    std::string allergies;
+    std::string diseases;
+    std::string surgeries;
+    std::string observations;
 };
 
 struct Image
 {
-    char name[50];
-    char type[10];
+    std::string name;
+    std::string type;
     int width;
     int height;
-    char weight[20];
+    std::string weight;
 };
 
 struct FileHeader
 {
-    char fileType[10];
-    char version[10];
-    char creation_date[20];
+    std::string fileType;
+    std::string version;
+    std::string creation_date;
     Patient patient;
     Image image;
 };
 
 Patient getPatientData();
 Image createImageFromPath(std::string path);
-#endif 
+
+void writeString(std::ofstream& outFile, const std::string& str);
+void readString(std::ifstream& inFile, std::string& str);
+void writePatient(std::ofstream& outFile, const Patient& patient);
+void readPatient(std::ifstream& inFile, Patient& patient);
+void writeImage(std::ofstream& outFile, const Image& image);
+void readImage(std::ifstream& inFile, Image& image);
+void writeHeader(std::ofstream& outFile, const FileHeader& header);
+void readHeader(std::ifstream& inFile, FileHeader& header);
+
+#endif

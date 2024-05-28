@@ -44,7 +44,8 @@ int main() {
         image
     };
 
-    outFile.write((char*)&header, sizeof(header));
+    writeHeader(outFile, header);
+
     Mat matriz = generarMatrizApartirDeImagen("static/6ta.jpg");
     outFile.write((char*)matriz.data, matriz.total() * matriz.elemSize());
     outFile.close();

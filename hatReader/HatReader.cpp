@@ -2,7 +2,6 @@
 #include <fstream>
 #include "./header/FileHeader.h"
 #include <opencv2/opencv.hpp>
-#include <iostream>
 #include "./imageHAT/Image.h"
 
 using namespace cv;
@@ -16,11 +15,11 @@ const std::string RESET = "\033[0m";  // Restablecer al color predeterminado
 
 void printPatient(const Patient &patient)
 {
-    std::cout << GREEN; // Cambiar color a rojo
+    std::cout << GREEN; // Cambiar color a verde
     std::cout << "Nombre: " << patient.name << "\n";
     std::cout << "Apellido: " << patient.lastName << "\n";
     std::cout << "Edad: " << patient.age << "\n";
-    std::cout << "Sexo: " << patient.gender << "\n"; // Asegúrate de completar esta línea correctamente
+    std::cout << "Sexo: " << patient.gender << "\n";
     std::cout << "Fecha de nacimiento: " << patient.dateOfBirth << "\n";
     std::cout << "Dirección: " << patient.address << "\n";
     std::cout << "Teléfono: " << patient.phone << "\n";
@@ -40,9 +39,18 @@ void printImage(const Image &image)
     std::cout << "Tipo: " << image.type << "\n";
     std::cout << "Ancho: " << image.width << "\n";
     std::cout << "Alto: " << image.height << "\n";
-    std::cout << "Peso: " << image.weight << "bytes"
-              << "\n";
+    std::cout << "Peso: " << image.weight << " bytes\n";
     std::cout << RESET; // Restablecer el color al predeterminado
+}
+
+void readImageAndShow(int width, int height, const std::vector<char>& data) {
+    Mat img(height, width, CV_8UC1, const_cast<char*>(data.data()));
+    if (img.empty()) {
+        cerr << "Error al reconstruir la imagen." << endl;
+        return;
+    }
+    imshow("Imagen", img);
+    waitKey(0);
 }
 
 int main()
@@ -56,7 +64,7 @@ int main()
 
     // Leer la cabecera
     FileHeader header;
-    inFile.read((char *)&header, sizeof(header));
+    readHeader(inFile, header);
     if (!inFile)
     {
         std::cerr << "Error leyendo la cabecera del archivo" << std::endl;
@@ -76,8 +84,8 @@ int main()
     // Calcular el tamaño del contenido adicional
     inFile.seekg(0, ios::end); // Mover al final del archivo
     auto endPos = inFile.tellg();
-    auto contentSize = static_cast<size_t>(endPos) - sizeof(header);
-    inFile.seekg(sizeof(header), ios::beg);  
+    auto contentSize = static_cast<size_t>(endPos) - inFile.tellg();
+    inFile.seekg(inFile.tellg(), ios::beg);  
     
     // Leer el contenido adicional
     vector<char> content(contentSize);
@@ -91,8 +99,9 @@ int main()
 
     int ancho = header.image.width;
     int alto = header.image.height;
-    int tipo = CV_8UC1;
-    readImageAndShow(ancho, alto, tipo);
+    std::cout << "Ancho: " << ancho << "\n";
+    readImageAndShow(ancho, alto, content);
+
     // Cerrar el archivo
     inFile.close();
 

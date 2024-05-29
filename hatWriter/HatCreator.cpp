@@ -6,10 +6,11 @@
 #include "./header/FileHeader.h"
 #include <string>
 #include "./imageBody/Body.h"
+#include "./encrypt/main_vigenerecipher.h"
 #include <opencv2/opencv.hpp>
 
 using namespace std;
-
+std::string SECRET_KEY = "123";
 std::string getCurrentDate() {
     auto now = std::chrono::system_clock::now();
     std::time_t now_time = std::chrono::system_clock::to_time_t(now);
@@ -58,6 +59,6 @@ int main() {
     outFile.write((char*)matriz.data, matriz.total() * matriz.elemSize());
     outFile.close();
     std::cout << "Archivo 'radiography.hat' creado exitosamente." << std::endl;
-
+    vigenereExec("e", SECRET_KEY, "../hat/radiography.hat", "../hat/radiography.hat.enc");
     return 0;
 }

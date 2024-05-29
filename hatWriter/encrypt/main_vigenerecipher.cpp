@@ -4,16 +4,7 @@
 #include <iostream>
 #include <string>
 
-int main(int argc, char* argv[]) {
-    if (argc != 5) {
-        std::cerr << "Uso: " << argv[0] << " <mode> <key> <Archivo IN> <Archivo out>\n";
-        return 1;
-    }
-
-    std::string mode = argv[1];
-    std::string key = argv[2];
-    std::string inputFile = argv[3];
-    std::string outputFile = argv[4];
+int vigenereExec(std::string mode, std::string key, std::string inputFile, std::string outputFile) {
 
     std::ifstream input(inputFile);
     if (!input) {

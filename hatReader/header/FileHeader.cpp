@@ -5,8 +5,14 @@
 #include <string>
 #include <opencv2/opencv.hpp>
 
-using namespace std;
 using namespace cv;
+using namespace std;
+
+// Definiciones de colores usando secuencias de escape ANSI
+const std::string RED = "\033[31m";   // Rojo para la información del paciente
+const std::string GREEN = "\033[32m"; // Verde para la información adicional
+const std::string BLUE = "\033[34m";  // Azul para la información de la imagen
+const std::string RESET = "\033[0m";  // Restablecer al color predeterminado
 
 void writeString(ofstream& outFile, const string& str) {
     size_t length = str.length();
@@ -83,4 +89,35 @@ void readHeader(ifstream& inFile, FileHeader& header) {
     readString(inFile, header.creation_date);
     readPatient(inFile, header.patient);
     readImage(inFile, header.image);
+}
+
+
+void printPatient(const Patient &patient)
+{
+    std::cout << GREEN; // Cambiar color a verde
+    std::cout << "Nombre: " << patient.name << "\n";
+    std::cout << "Apellido: " << patient.lastName << "\n";
+    std::cout << "Edad: " << patient.age << "\n";
+    std::cout << "Sexo: " << patient.gender << "\n";
+    std::cout << "Fecha de nacimiento: " << patient.dateOfBirth << "\n";
+    std::cout << "Dirección: " << patient.address << "\n";
+    std::cout << "Teléfono: " << patient.phone << "\n";
+    std::cout << "Correo electrónico: " << patient.email << "\n";
+    std::cout << "Tipo de sangre: " << patient.bloodType << "\n";
+    std::cout << "Alergias: " << patient.allergies << "\n";
+    std::cout << "Enfermedades: " << patient.diseases << "\n";
+    std::cout << "Cirugías: " << patient.surgeries << "\n";
+    std::cout << "Observaciones: " << patient.observations << "\n";
+    std::cout << RESET; // Restablecer el color al predeterminado
+}
+
+void printImage(const Image &image)
+{
+    std::cout << BLUE; // Cambiar color a azul
+    std::cout << "Nombre de la imagen: " << image.name << "\n";
+    std::cout << "Tipo: " << image.type << "\n";
+    std::cout << "Ancho: " << image.width << "\n";
+    std::cout << "Alto: " << image.height << "\n";
+    std::cout << "Peso: " << image.weight << " bytes\n";
+    std::cout << RESET; // Restablecer el color al predeterminado
 }

@@ -46,5 +46,7 @@ void writeImage(std::ofstream& outFile, const Image& image);
 void readImage(std::ifstream& inFile, Image& image);
 void writeHeader(std::ofstream& outFile, const FileHeader& header);
 void readHeader(std::ifstream& inFile, FileHeader& header);
+void printPatient(const Patient &patient);
+void printImage(const Image &image);
 
 #endif

@@ -55,10 +55,12 @@ Patient getPatientData()
     return patient;
 }
 
-Image createImageFromPath(string imagePath) {
+Image createImageFromPath(string imagePath)
+{
     Mat image = imread(imagePath);
 
-    if (image.empty()) {
+    if (image.empty())
+    {
         cerr << "Error al cargar la imagen." << endl;
         exit(EXIT_FAILURE);
     }
@@ -71,7 +73,8 @@ Image createImageFromPath(string imagePath) {
 
     // Obtener el tamaño del archivo
     ifstream file(imagePath, ios::binary | ios::ate);
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         cerr << "Error al abrir el archivo." << endl;
         exit(EXIT_FAILURE);
     }
@@ -87,26 +90,18 @@ Image createImageFromPath(string imagePath) {
     return img;
 }
 
-void writeString(ofstream& outFile, const std::string& str) {
+void writeString(ofstream &outFile, const std::string &str)
+{
     size_t len = str.length();
-    outFile.write(reinterpret_cast<const char*>(&len), sizeof(len));
+    outFile.write(reinterpret_cast<const char *>(&len), sizeof(len));
     outFile.write(str.c_str(), len);
 }
 
-void readString(ifstream& inFile, std::string& str) {
-    size_t len;
-    inFile.read(reinterpret_cast<char*>(&len), sizeof(len));
-    char* buffer = new char[len + 1];
-    inFile.read(buffer, len);
-    buffer[len] = '\0';
-    str = buffer;
-    delete[] buffer;
-}
-
-void writePatient(ofstream& outFile, const Patient& patient) {
+void writePatient(ofstream &outFile, const Patient &patient)
+{
     writeString(outFile, patient.name);
     writeString(outFile, patient.lastName);
-    outFile.write(reinterpret_cast<const char*>(&patient.age), sizeof(patient.age));
+    outFile.write(reinterpret_cast<const char *>(&patient.age), sizeof(patient.age));
     writeString(outFile, patient.gender);
     writeString(outFile, patient.dateOfBirth);
     writeString(outFile, patient.address);
@@ -119,50 +114,20 @@ void writePatient(ofstream& outFile, const Patient& patient) {
     writeString(outFile, patient.observations);
 }
 
-void readPatient(ifstream& inFile, Patient& patient) {
-    readString(inFile, patient.name);
-    readString(inFile, patient.lastName);
-    inFile.read(reinterpret_cast<char*>(&patient.age), sizeof(patient.age));
-    readString(inFile, patient.gender);
-    readString(inFile, patient.dateOfBirth);
-    readString(inFile, patient.address);
-    readString(inFile, patient.phone);
-    readString(inFile, patient.email);
-    readString(inFile, patient.bloodType);
-    readString(inFile, patient.allergies);
-    readString(inFile, patient.diseases);
-    readString(inFile, patient.surgeries);
-    readString(inFile, patient.observations);
-}
-
-void writeImage(ofstream& outFile, const Image& image) {
+void writeImage(ofstream &outFile, const Image &image)
+{
     writeString(outFile, image.name);
     writeString(outFile, image.type);
-    outFile.write(reinterpret_cast<const char*>(&image.width), sizeof(image.width));
-    outFile.write(reinterpret_cast<const char*>(&image.height), sizeof(image.height));
+    outFile.write(reinterpret_cast<const char *>(&image.width), sizeof(image.width));
+    outFile.write(reinterpret_cast<const char *>(&image.height), sizeof(image.height));
     writeString(outFile, image.weight);
 }
 
-void readImage(ifstream& inFile, Image& image) {
-    readString(inFile, image.name);
-    readString(inFile, image.type);
-    inFile.read(reinterpret_cast<char*>(&image.width), sizeof(image.width));
-    inFile.read(reinterpret_cast<char*>(&image.height), sizeof(image.height));
-    readString(inFile, image.weight);
-}
-
-void writeHeader(ofstream& outFile, const FileHeader& header) {
+void writeHeader(ofstream &outFile, const FileHeader &header)
+{
     writeString(outFile, header.fileType);
     writeString(outFile, header.version);
     writeString(outFile, header.creation_date);
     writePatient(outFile, header.patient);
     writeImage(outFile, header.image);
-}
-
-void readHeader(ifstream& inFile, FileHeader& header) {
-    readString(inFile, header.fileType);
-    readString(inFile, header.version);
-    readString(inFile, header.creation_date);
-    readPatient(inFile, header.patient);
-    readImage(inFile, header.image);
 }

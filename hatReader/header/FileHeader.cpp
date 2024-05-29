@@ -14,33 +14,11 @@ const std::string GREEN = "\033[32m"; // Verde para la información adicional
 const std::string BLUE = "\033[34m";  // Azul para la información de la imagen
 const std::string RESET = "\033[0m";  // Restablecer al color predeterminado
 
-void writeString(ofstream& outFile, const string& str) {
-    size_t length = str.length();
-    outFile.write(reinterpret_cast<const char*>(&length), sizeof(length));
-    outFile.write(str.c_str(), length);
-}
-
 void readString(ifstream& inFile, string& str) {
     size_t length;
     inFile.read(reinterpret_cast<char*>(&length), sizeof(length));
     str.resize(length);
     inFile.read(&str[0], length);
-}
-
-void writePatient(ofstream& outFile, const Patient& patient) {
-    writeString(outFile, patient.name);
-    writeString(outFile, patient.lastName);
-    outFile.write(reinterpret_cast<const char*>(&patient.age), sizeof(patient.age));
-    writeString(outFile, patient.gender);
-    writeString(outFile, patient.dateOfBirth);
-    writeString(outFile, patient.address);
-    writeString(outFile, patient.phone);
-    writeString(outFile, patient.email);
-    writeString(outFile, patient.bloodType);
-    writeString(outFile, patient.allergies);
-    writeString(outFile, patient.diseases);
-    writeString(outFile, patient.surgeries);
-    writeString(outFile, patient.observations);
 }
 
 void readPatient(ifstream& inFile, Patient& patient) {
@@ -59,28 +37,12 @@ void readPatient(ifstream& inFile, Patient& patient) {
     readString(inFile, patient.observations);
 }
 
-void writeImage(ofstream& outFile, const Image& image) {
-    writeString(outFile, image.name);
-    writeString(outFile, image.type);
-    outFile.write(reinterpret_cast<const char*>(&image.width), sizeof(image.width));
-    outFile.write(reinterpret_cast<const char*>(&image.height), sizeof(image.height));
-    writeString(outFile, image.weight);
-}
-
 void readImage(ifstream& inFile, Image& image) {
     readString(inFile, image.name);
     readString(inFile, image.type);
     inFile.read(reinterpret_cast<char*>(&image.width), sizeof(image.width));
     inFile.read(reinterpret_cast<char*>(&image.height), sizeof(image.height));
     readString(inFile, image.weight);
-}
-
-void writeHeader(ofstream& outFile, const FileHeader& header) {
-    writeString(outFile, header.fileType);
-    writeString(outFile, header.version);
-    writeString(outFile, header.creation_date);
-    writePatient(outFile, header.patient);
-    writeImage(outFile, header.image);
 }
 
 void readHeader(ifstream& inFile, FileHeader& header) {

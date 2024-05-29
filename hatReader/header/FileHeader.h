@@ -38,13 +38,9 @@ struct FileHeader
     Image image;
 };
 
-void writeString(std::ofstream& outFile, const std::string& str);
 void readString(std::ifstream& inFile, std::string& str);
-void writePatient(std::ofstream& outFile, const Patient& patient);
 void readPatient(std::ifstream& inFile, Patient& patient);
-void writeImage(std::ofstream& outFile, const Image& image);
 void readImage(std::ifstream& inFile, Image& image);
-void writeHeader(std::ofstream& outFile, const FileHeader& header);
 void readHeader(std::ifstream& inFile, FileHeader& header);
 void printPatient(const Patient &patient);
 void printImage(const Image &image);

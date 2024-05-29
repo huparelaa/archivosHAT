@@ -44,6 +44,6 @@ Image createImageFromPath(std::string path);
 void writeString(std::ofstream& outFile, const std::string& str);
 void writePatient(std::ofstream& outFile, const Patient& patient);
 void writeImage(std::ofstream& outFile, const Image& image);
-void writeHeader(std::ofstream& outFile, const FileHeader& header);
+void writeHeader(std::ofstream &outFile, const FileHeader &header, const std::string &key);
 
 #endif

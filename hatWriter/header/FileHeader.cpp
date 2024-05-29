@@ -1,7 +1,9 @@
 #include "FileHeader.h"
+#include "../encrypt/VigenereCipher.h"
 #include <iostream>
 #include <fstream>
 #include <limits>
+#include <sstream>
 #include <string>
 #include <opencv2/opencv.hpp>
 
@@ -20,7 +22,7 @@ Patient getPatientData()
 
     std::cout << "Ingrese la edad del paciente: ";
     std::cin >> patient.age;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpia el búfer de entrada
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     std::cout << "Ingrese el sexo del paciente (M o F): ";
     std::getline(std::cin, patient.gender);
@@ -71,7 +73,6 @@ Image createImageFromPath(string imagePath)
     int width = image.cols;
     int height = image.rows;
 
-    // Obtener el tamaño del archivo
     ifstream file(imagePath, ios::binary | ios::ate);
     if (!file.is_open())
     {
@@ -90,44 +91,52 @@ Image createImageFromPath(string imagePath)
     return img;
 }
 
-void writeString(ofstream &outFile, const std::string &str)
+void writeString(ostream &out, const std::string &str)
 {
     size_t len = str.length();
-    outFile.write(reinterpret_cast<const char *>(&len), sizeof(len));
-    outFile.write(str.c_str(), len);
+    out.write(reinterpret_cast<const char *>(&len), sizeof(len));
+    out.write(str.c_str(), len);
 }
 
-void writePatient(ofstream &outFile, const Patient &patient)
+void writePatient(ostream &out, const Patient &patient)
 {
-    writeString(outFile, patient.name);
-    writeString(outFile, patient.lastName);
-    outFile.write(reinterpret_cast<const char *>(&patient.age), sizeof(patient.age));
-    writeString(outFile, patient.gender);
-    writeString(outFile, patient.dateOfBirth);
-    writeString(outFile, patient.address);
-    writeString(outFile, patient.phone);
-    writeString(outFile, patient.email);
-    writeString(outFile, patient.bloodType);
-    writeString(outFile, patient.allergies);
-    writeString(outFile, patient.diseases);
-    writeString(outFile, patient.surgeries);
-    writeString(outFile, patient.observations);
+    writeString(out, patient.name);
+    writeString(out, patient.lastName);
+    out.write(reinterpret_cast<const char *>(&patient.age), sizeof(patient.age));
+    writeString(out, patient.gender);
+    writeString(out, patient.dateOfBirth);
+    writeString(out, patient.address);
+    writeString(out, patient.phone);
+    writeString(out, patient.email);
+    writeString(out, patient.bloodType);
+    writeString(out, patient.allergies);
+    writeString(out, patient.diseases);
+    writeString(out, patient.surgeries);
+    writeString(out, patient.observations);
 }
 
-void writeImage(ofstream &outFile, const Image &image)
+void writeImage(ostream &out, const Image &image)
 {
-    writeString(outFile, image.name);
-    writeString(outFile, image.type);
-    outFile.write(reinterpret_cast<const char *>(&image.width), sizeof(image.width));
-    outFile.write(reinterpret_cast<const char *>(&image.height), sizeof(image.height));
-    writeString(outFile, image.weight);
+    writeString(out, image.name);
+    writeString(out, image.type);
+    out.write(reinterpret_cast<const char *>(&image.width), sizeof(image.width));
+    out.write(reinterpret_cast<const char *>(&image.height), sizeof(image.height));
+    writeString(out, image.weight);
 }
 
-void writeHeader(ofstream &outFile, const FileHeader &header)
+void writeHeader(ofstream &outFile, const FileHeader &header, const std::string &key)
 {
-    writeString(outFile, header.fileType);
-    writeString(outFile, header.version);
-    writeString(outFile, header.creation_date);
-    writePatient(outFile, header.patient);
-    writeImage(outFile, header.image);
+    std::ostringstream headerStream;
+
+    writeString(headerStream, header.fileType);
+    writeString(headerStream, header.version);
+    writeString(headerStream, header.creation_date);
+    writePatient(headerStream, header.patient);
+    writeImage(headerStream, header.image);
+
+    std::string headerData = headerStream.str();
+    VigenereCipher cipher(key);
+    std::string encryptedHeader = cipher.encrypt(headerData);
+
+    outFile.write(encryptedHeader.c_str(), encryptedHeader.size());
 }

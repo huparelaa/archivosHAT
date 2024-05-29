@@ -52,13 +52,13 @@ int main() {
         patient,
         image
     };
-
-    writeHeader(outFile, header);
+    
+    std::string key = "F#45F/331.h"; // Clave para cifrar la cabecera
+    writeHeader(outFile, header, key);
 
     Mat matriz = generarMatrizApartirDeImagen("static/6ta.jpg");
     outFile.write((char*)matriz.data, matriz.total() * matriz.elemSize());
     outFile.close();
     std::cout << "Archivo 'radiography.hat' creado exitosamente." << std::endl;
-    vigenereExec("e", SECRET_KEY, "../hat/radiography.hat", "../hat/radiography.hat.enc");
     return 0;
 }

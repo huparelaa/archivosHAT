@@ -1,13 +1,34 @@
 #include <iostream>
 #include <fstream>
 #include "./header/FileHeader.h"
+#include "./encrypt/VigenereCipher.h"
 #include <opencv2/opencv.hpp>
 #include "./imageHAT/Image.h"
-
 using namespace cv;
 using namespace std;
 
 const std::string RESET = "\033[0m";  // Restablecer al color predeterminado
+
+void readHeaderAndDecrypt(ifstream &inFile, FileHeader &header, const std::string &key) {
+    // Leer la cabecera encriptada
+    std::ostringstream encryptedHeaderStream;
+    encryptedHeaderStream << inFile.rdbuf();
+    std::string encryptedHeader = encryptedHeaderStream.str();
+
+    // Desencriptar la cabecera
+    VigenereCipher cipher(key);
+    std::string decryptedHeader = cipher.decrypt(encryptedHeader);
+
+    // Convertir la cabecera desencriptada a un stream
+    std::istringstream decryptedHeaderStream(decryptedHeader);
+
+    // Leer la cabecera desde el stream desencriptado
+    readString(decryptedHeaderStream, header.fileType);
+    readString(decryptedHeaderStream, header.version);
+    readString(decryptedHeaderStream, header.creation_date);
+    readPatient(decryptedHeaderStream, header.patient);
+    readImage(decryptedHeaderStream, header.image);
+}
 
 int main()
 {
@@ -18,9 +39,10 @@ int main()
         return 1;
     }
 
-    // Leer la cabecera
+    // Leer y desencriptar la cabecera
     FileHeader header;
-    readHeader(inFile, header);
+    std::string key = "F#45F/331.h"; // Clave para desencriptar la cabecera
+    readHeaderAndDecrypt(inFile, header, key);
     if (!inFile)
     {
         std::cerr << "Error leyendo la cabecera del archivo" << std::endl;

@@ -38,10 +38,10 @@ struct FileHeader
     Image image;
 };
 
-void readString(std::ifstream& inFile, std::string& str);
-void readPatient(std::ifstream& inFile, Patient& patient);
-void readImage(std::ifstream& inFile, Image& image);
-void readHeader(std::ifstream& inFile, FileHeader& header);
+void readString(std::istream& in, std::string& str);
+void readPatient(std::istream& in, Patient& patient);
+void readImage(std::istream& in, Image& image);
+void readHeader(std::istream& in, FileHeader& header);
 void printPatient(const Patient &patient);
 void printImage(const Image &image);
 

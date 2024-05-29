@@ -14,45 +14,44 @@ const std::string GREEN = "\033[32m"; // Verde para la información adicional
 const std::string BLUE = "\033[34m";  // Azul para la información de la imagen
 const std::string RESET = "\033[0m";  // Restablecer al color predeterminado
 
-void readString(ifstream& inFile, string& str) {
+void readString(istream& in, string& str) {
     size_t length;
-    inFile.read(reinterpret_cast<char*>(&length), sizeof(length));
+    in.read(reinterpret_cast<char*>(&length), sizeof(length));
     str.resize(length);
-    inFile.read(&str[0], length);
+    in.read(&str[0], length);
 }
 
-void readPatient(ifstream& inFile, Patient& patient) {
-    readString(inFile, patient.name);
-    readString(inFile, patient.lastName);
-    inFile.read(reinterpret_cast<char*>(&patient.age), sizeof(patient.age));
-    readString(inFile, patient.gender);
-    readString(inFile, patient.dateOfBirth);
-    readString(inFile, patient.address);
-    readString(inFile, patient.phone);
-    readString(inFile, patient.email);
-    readString(inFile, patient.bloodType);
-    readString(inFile, patient.allergies);
-    readString(inFile, patient.diseases);
-    readString(inFile, patient.surgeries);
-    readString(inFile, patient.observations);
+void readPatient(istream& in, Patient& patient) {
+    readString(in, patient.name);
+    readString(in, patient.lastName);
+    in.read(reinterpret_cast<char*>(&patient.age), sizeof(patient.age));
+    readString(in, patient.gender);
+    readString(in, patient.dateOfBirth);
+    readString(in, patient.address);
+    readString(in, patient.phone);
+    readString(in, patient.email);
+    readString(in, patient.bloodType);
+    readString(in, patient.allergies);
+    readString(in, patient.diseases);
+    readString(in, patient.surgeries);
+    readString(in, patient.observations);
 }
 
-void readImage(ifstream& inFile, Image& image) {
-    readString(inFile, image.name);
-    readString(inFile, image.type);
-    inFile.read(reinterpret_cast<char*>(&image.width), sizeof(image.width));
-    inFile.read(reinterpret_cast<char*>(&image.height), sizeof(image.height));
-    readString(inFile, image.weight);
+void readImage(istream& in, Image& image) {
+    readString(in, image.name);
+    readString(in, image.type);
+    in.read(reinterpret_cast<char*>(&image.width), sizeof(image.width));
+    in.read(reinterpret_cast<char*>(&image.height), sizeof(image.height));
+    readString(in, image.weight);
 }
 
-void readHeader(ifstream& inFile, FileHeader& header) {
-    readString(inFile, header.fileType);
-    readString(inFile, header.version);
-    readString(inFile, header.creation_date);
-    readPatient(inFile, header.patient);
-    readImage(inFile, header.image);
+void readHeader(istream& in, FileHeader& header) {
+    readString(in, header.fileType);
+    readString(in, header.version);
+    readString(in, header.creation_date);
+    readPatient(in, header.patient);
+    readImage(in, header.image);
 }
-
 
 void printPatient(const Patient &patient)
 {

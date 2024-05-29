@@ -10,6 +10,14 @@
 
 using namespace std;
 
+std::string getCurrentDate() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+    char buf[20];
+    std::strftime(buf, sizeof(buf), "%Y-%m-%d", std::localtime(&now_time));
+    return std::string(buf);
+}
+
 int main() {
     std::ofstream outFile("../hat/radiography.hat", std::ios::binary);
     if (!outFile) {
@@ -39,7 +47,7 @@ int main() {
     FileHeader header = {
         "HAT",
         "1.0",
-        "9-4-2024",
+        getCurrentDate(), // Obtener la fecha dinámicamente
         patient,
         image
     };

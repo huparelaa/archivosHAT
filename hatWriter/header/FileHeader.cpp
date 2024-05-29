@@ -1,5 +1,6 @@
 #include "FileHeader.h"
 #include "../encrypt/VigenereCipher.h"
+#include "../compress/LZW.h"
 #include <iostream>
 #include <fstream>
 #include <limits>
@@ -138,5 +139,12 @@ void writeHeader(ofstream &outFile, const FileHeader &header, const std::string 
     VigenereCipher cipher(key);
     std::string encryptedHeader = cipher.encrypt(headerData);
 
-    outFile.write(encryptedHeader.c_str(), encryptedHeader.size());
+    LZW lzw;
+    std::vector<int> compressedHeader = lzw.compress(encryptedHeader);
+
+    size_t compressedSize = compressedHeader.size();
+    outFile.write(reinterpret_cast<const char*>(&compressedSize), sizeof(compressedSize));
+    for (int code : compressedHeader) {
+        outFile.write(reinterpret_cast<const char*>(&code), sizeof(code));
+    }
 }

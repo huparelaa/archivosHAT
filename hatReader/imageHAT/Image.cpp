@@ -26,7 +26,7 @@ void readImageAndShow(int ancho, int alto, int tipo) {
 
     // Reconstruir la matriz a partir del buffer
     Mat matriz(alto, ancho, tipo, buffer.data());
-    matriz = swapHalves(matriz);
+    //matriz = swapHalves(matriz);
 
     namedWindow("Imagen", WINDOW_AUTOSIZE);
 

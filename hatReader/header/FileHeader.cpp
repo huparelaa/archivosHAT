@@ -69,16 +69,16 @@ void printPatient(const Patient &patient)
     std::cout << "Enfermedades: " << patient.diseases << "\n";
     std::cout << "Cirugías: " << patient.surgeries << "\n";
     std::cout << "Observaciones: " << patient.observations << "\n";
-    std::cout << RESET; // Restablecer el color al predeterminado
+    std::cout << RESET; // Restablecer al color predeterminado
 }
 
 void printImage(const Image &image)
 {
     std::cout << BLUE; // Cambiar color a azul
     std::cout << "Nombre de la imagen: " << image.name << "\n";
-    std::cout << "Tipo: " << image.type << "\n";
+    std::cout << "Tipo de imagen: " << image.type << "\n";
     std::cout << "Ancho: " << image.width << "\n";
     std::cout << "Alto: " << image.height << "\n";
-    std::cout << "Peso: " << image.weight << " bytes\n";
-    std::cout << RESET; // Restablecer el color al predeterminado
+    std::cout << "Peso: " << image.weight << "\n";
+    std::cout << RESET; // Restablecer al color predeterminado
 }

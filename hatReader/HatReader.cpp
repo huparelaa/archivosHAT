@@ -2,6 +2,7 @@
 #include <fstream>
 #include "./header/FileHeader.h"
 #include "./encrypt/VigenereCipher.h"
+#include "./compress/LZW.h"
 #include <opencv2/opencv.hpp>
 #include "./imageHAT/Image.h"
 using namespace cv;
@@ -10,10 +11,19 @@ using namespace std;
 const std::string RESET = "\033[0m";  // Restablecer al color predeterminado
 
 void readHeaderAndDecrypt(ifstream &inFile, FileHeader &header, const std::string &key) {
-    // Leer la cabecera encriptada
-    std::ostringstream encryptedHeaderStream;
-    encryptedHeaderStream << inFile.rdbuf();
-    std::string encryptedHeader = encryptedHeaderStream.str();
+    // Leer el tamaño de la cabecera comprimida
+    size_t compressedSize;
+    inFile.read(reinterpret_cast<char*>(&compressedSize), sizeof(compressedSize));
+
+    // Leer la cabecera comprimida
+    std::vector<int> compressedHeader(compressedSize);
+    for (size_t i = 0; i < compressedSize; ++i) {
+        inFile.read(reinterpret_cast<char*>(&compressedHeader[i]), sizeof(compressedHeader[i]));
+    }
+
+    // Descomprimir la cabecera
+    LZW lzw;
+    std::string encryptedHeader = lzw.decompress(compressedHeader);
 
     // Desencriptar la cabecera
     VigenereCipher cipher(key);
@@ -59,7 +69,7 @@ int main()
     printPatient(header.patient);
     printImage(header.image);
 
-    std::cout << RESET; // Restablecer el color al predeterminado
+    std::cout << RESET; // Restablecer al color predeterminado
 
     int ancho = header.image.width;
     int alto = header.image.height;
